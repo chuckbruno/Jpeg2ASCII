@@ -18,24 +18,26 @@ char getCorrespondingAsciiChar(int grayScale, std::string among) {
 int main(int argc, char* argv[])
 {
 
-	//if (argc != 3) {
-	//	std::exception("wrong args");
-	//	return -1;
-	//}
+	if (argc != 3) {
+		std::cerr << "wrong args, please set image path and ascii path" << std::endl;
+		return -1;
+	}
 
-	//std::string path;
-	//std::string outputPath;
+	std::string path;
+	std::string outputPath;
 
-	//path = argv[1];
-	//outputPath = argv[2];
+	path = argv[1];
+	outputPath = argv[2];
 
-	std::string path = "h13.jpg";
-	std::string outputPath = "16_low.txt";
+	//std::string path = "h13.jpg";
+	//std::string outputPath = "16_low.txt";
 	std::string among = "@%#Oo*+=-:.";
 
 	sf::Image image;
-	if (!image.loadFromFile(path))
+	if (!image.loadFromFile(path)) {
+		std::cerr << "cannot open image file" << std::endl;
 		return -1;
+	}
 
 	sf::Image bwImage(image);
 	std::cout << "Conversion to black and white ..." << std::endl;
@@ -49,6 +51,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//convert to gray image
+	//bwImage.saveToFile("gray.jpg");
+
 	std::cout << "Done" << std::endl;
 	std::cout << "Conversion to ASCII ..." << std::endl;
 
@@ -61,7 +66,12 @@ int main(int argc, char* argv[])
 	}
 
 	std::ofstream output(outputPath);
-	if (output) output << asciiArt;
+	if (!output.is_open()) {
+		std::cerr << "cannot write ascii text to file" << std::endl;
+		return -1;
+	} 
+	output << asciiArt;
 	output.close();
 	std::cout << "Finished! You will find the result at : " << outputPath << std::endl;
+	return 0;
 }
